@@ -20,7 +20,8 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 
 # ALLOWED_HOSTS = ['192.168.43.234','127.0.0.1', '10.250.118.6','10.109.0.6']
-ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost'),'https://fortuneflow-ngc2.onrender.com', '127.0.0.1']
+ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost'),'api.fortuneflow.com',                # <-- VOTRE BACKEND REQUIS ICI
+    'fortuneflow-r302.onrender.com', '127.0.0.1']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -206,3 +207,6 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://fortuneflow-ngc2.onrender.com',
+]
