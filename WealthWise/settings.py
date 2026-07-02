@@ -14,11 +14,13 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2co45hfuov&-_u0k=e^d4$6ye@d)%3q0(+s^&&(*6qd-qgl#sx'
-DEBUG = True
+
+# DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 
 # ALLOWED_HOSTS = ['192.168.43.234','127.0.0.1', '10.250.118.6','10.109.0.6']
-ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost'), '127.0.0.1']
+ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost'),'https://fortuneflow-ngc2.onrender.com', '127.0.0.1']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -160,11 +162,17 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+
+SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_SAMESITE = 'Lax'
+# CSRF_COOKIE_SAMESITE = 'Lax'
+
+SESSION_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
+CSRF_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
+
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SAMESITE = 'Lax'
+
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
@@ -187,7 +195,8 @@ REST_FRAMEWORK = {
     ],
 }
 
-FRONTEND_URL = 'http://localhost:5173'
+# FRONTEND_URL = 'http://localhost:5173'
+FRONTEND_URL = 'https://fortuneflow-ngc2.onrender.com'
 
 CORS_ALLOWED_ORIGINS = [
     'https://fortuneflow-ngc2.onrender.com',
