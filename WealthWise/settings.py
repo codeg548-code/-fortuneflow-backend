@@ -190,9 +190,9 @@ REST_FRAMEWORK = {
 FRONTEND_URL = 'http://localhost:5173'
 
 CORS_ALLOWED_ORIGINS = [
+    'https://fortuneflow-ngc2.onrender.com',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-    'https://app.fortuneflow.com',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
