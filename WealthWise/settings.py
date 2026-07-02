@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+import dj_database_url
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,24 +87,57 @@ WSGI_APPLICATION = 'WealthWise.wsgi.application'
 # production
 DB_HOST = os.environ.get('DB_HOST')
 
-if DB_HOST:
+# if DB_HOST:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'NAME': os.environ.get('DB_NAME'),
+#             'USER': os.environ.get('DB_USER'),
+#             'PASSWORD': os.environ.get('DB_PASSWORD'),
+#             'HOST': DB_HOST,
+#             'PORT': os.environ.get('DB_PORT', '3306'),
+#             'OPTIONS': {
+#                 'ssl': {
+#                     # 'ca': os.environ.get('DB_SSL_CA_PATH', os.path.join(BASE_DIR, 'ca.pem'))
+#                     # 'ca': os.environ.get('DB_SSL_CA_PATH', str(BASE_DIR / 'ca.pem'))
+#                     # 'ca': '/etc/ssl/certs/ca-certificates.crt'
+#                     'ca': str(BASE_DIR / 'ca.pem'),
+#                     'check_hostname': False
+#                 }
+#             }
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql', 
+#             'NAME': 'wealthwise_pro_db',
+#             'USER': 'root',
+#             'PASSWORD': '', 
+#             'HOST': 'localhost',
+#             'PORT': '3306',
+#             'OPTIONS': {
+#                 'charset': 'utf8mb4',
+#             }
+#         }
+#     }
+
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': DB_HOST,
-            'PORT': os.environ.get('DB_PORT', '3306'),
-            'OPTIONS': {
-                'ssl': {
-                    # 'ca': os.environ.get('DB_SSL_CA_PATH', os.path.join(BASE_DIR, 'ca.pem'))
-                    # 'ca': os.environ.get('DB_SSL_CA_PATH', str(BASE_DIR / 'ca.pem'))
-                    # 'ca': '/etc/ssl/certs/ca-certificates.crt'
-                    'ca': str(BASE_DIR / 'ca.pem'),
-                    'check_hostname': False
-                }
-            }
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+    # Injection spécifique des options SSL pour MySQL / Aiven
+    DATABASES['default']['OPTIONS'] = {
+        'ssl': {
+            'ca': str(BASE_DIR / 'ca.pem'),
+            'check_hostname': False
         }
     }
 else:
@@ -115,12 +149,9 @@ else:
             'PASSWORD': '', 
             'HOST': 'localhost',
             'PORT': '3306',
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-            }
+            'OPTIONS': {'charset': 'utf8mb4'}
         }
     }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
