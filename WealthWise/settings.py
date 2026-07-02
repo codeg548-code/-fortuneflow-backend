@@ -94,7 +94,8 @@ if DB_HOST:
             'PORT': os.environ.get('DB_PORT', '3306'),
             'OPTIONS': {
                 'ssl': {
-                    'ca': os.environ.get('DB_SSL_CA_PATH', os.path.join(BASE_DIR, 'ca.pem'))
+                    # 'ca': os.environ.get('DB_SSL_CA_PATH', os.path.join(BASE_DIR, 'ca.pem'))
+                    'ca': os.environ.get('DB_SSL_CA_PATH', str(BASE_DIR / 'ca.pem'))
                 }
             }
         }
