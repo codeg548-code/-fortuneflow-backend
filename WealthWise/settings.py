@@ -96,7 +96,9 @@ if DB_HOST:
                 'ssl': {
                     # 'ca': os.environ.get('DB_SSL_CA_PATH', os.path.join(BASE_DIR, 'ca.pem'))
                     # 'ca': os.environ.get('DB_SSL_CA_PATH', str(BASE_DIR / 'ca.pem'))
-                    'ca': '/etc/ssl/certs/ca-certificates.crt'
+                    # 'ca': '/etc/ssl/certs/ca-certificates.crt'
+                    'ca': str(BASE_DIR / 'ca.pem'),
+                    'check_hostname': False
                 }
             }
         }
