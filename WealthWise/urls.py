@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from finance.views import api_ping
 
 urlpatterns = [
     path('', include('finance.urls')),
     path('admin/', admin.site.urls),
+    path('api/ping/', api_ping, name='api_ping'),
 ]

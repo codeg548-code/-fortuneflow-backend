@@ -1,14 +1,14 @@
 from .helpers import enrichir_packs_pour_client, pack_peut_etre_achete
 from .models import Client, Pack, Achat, Depot, Retrait, Parrainage, WithdrawalSuspension
 from django.contrib.auth.hashers import make_password
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError, transaction, connection
 from django.db.models import F, Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import timedelta
-from django.http import Http404, HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from decimal import Decimal, InvalidOperation
@@ -23,6 +23,19 @@ MONTANT_MINIMUM_RETRAIT = 1000
 MINIMUM_RECHARGE = 2500
 FRAIS_POURCENTAGE_RETRAIT = 0.10
 
+
+def api_ping(request):
+    """
+    Route publique pour maintenir Render et Aiven éveillés.
+    Exécute une requête SQL minimale.
+    """
+    try:
+        # Un simple 'SELECT 1' force la connexion à Aiven sans charger de données
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return JsonResponse({"status": "ok", "database": "connected"}, status=200)
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
 def _is_payment_configured(client):
     return bool(
