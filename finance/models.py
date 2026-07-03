@@ -13,6 +13,10 @@ class Pack(models.Model):
     duree = models.IntegerField()
     date_creation = models.DateField(default=timezone.now)
 
+    est_vip = models.BooleanField(default=False)
+    gain_total = models.IntegerField(default=0)
+    occurrence_max = models.IntegerField(null=True, blank=True)
+
     class Meta:
         verbose_name = "Pack d'Investissement"
         verbose_name_plural = "Packs d'Investissement"
