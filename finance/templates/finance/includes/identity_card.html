@@ -1,0 +1,14 @@
+<div class="ff-identity-card">
+    <p class="ff-identity-card__label">
+        <i class="fas fa-{{ icon|default:'user-check' }}"></i> {{ label }}
+    </p>
+    {% for row in rows %}
+    <div class="ff-identity-card__row">
+        <span>{{ row.label }}</span>
+        <strong>{{ row.value }}</strong>
+    </div>
+    {% endfor %}
+    {% if link_url %}
+    <a href="{{ link_url }}" class="ff-link-muted">{{ link_text }}</a>
+    {% endif %}
+</div>

@@ -1,0 +1,90 @@
+/* FortuneFlow — Page layout (unified shell for all views) */
+
+.ff-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.ff-page--form {
+    max-width: 100%;
+}
+
+.ff-page--dashboard {
+    gap: var(--space-4);
+}
+
+.ff-page-header {
+    text-align: center;
+    padding: 0 var(--space-2);
+}
+
+.ff-page-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.55;
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-2);
+}
+
+.ff-page__content {
+    width: 100%;
+}
+
+.ff-page__stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.ff-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--border-width) solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: clamp(1rem, 4vw, 1.25rem);
+    box-shadow: var(--shadow-sm);
+}
+
+.ff-section__title {
+    font-size: var(--text-md);
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text);
+}
+
+.ff-section__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+    line-height: 1.5;
+}
+
+.ff-page--form .ff-form-card {
+    margin-inline: auto;
+}
+
+.ff-card--flush {
+    padding: 0;
+    overflow: hidden;
+}
+
+.ff-card--flush .ff-table-wrap {
+    border: none;
+    border-radius: 0;
+    margin: 0;
+}
+
+.ff-card--flush .ff-empty {
+    padding: var(--space-8) var(--space-4);
+}
+
+.ff-table .ff-badge {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.4375rem;
+}

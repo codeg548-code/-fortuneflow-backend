@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#070b14">
+    <meta name="description" content="FortuneFlow — Plateforme d'investissement et gestion de portefeuille en FCFA">
+    <title>{% block title %}FortuneFlow{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="{% static 'plugins/fontawesome-free/webfonts/fa-solid-900.woff2' %}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'finance/css/design-system.css' %}">
+    {% block style %}{% endblock %}
+</head>
+<body>
+<div class="ff-app">
+
+    <header class="ff-header">
+        <a href="{% if user.is_authenticated %}{% url 'accueil' %}{% else %}{% url 'login' %}{% endif %}" class="ff-logo" aria-label="FortuneFlow — Accueil">
+            <span class="ff-logo-icon"><i class="fas fa-chart-line"></i></span>
+            <span class="ff-logo-text">FortuneFlow</span>
+        </a>
+        {% if user.is_authenticated %}
+        <button class="ff-header-btn" id="ffDrawerBtn" aria-label="Menu compte et historique">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+        {% else %}
+        <a href="{% url 'login' %}" class="ff-header-btn" aria-label="Se connecter">
+            <i class="fas fa-sign-in-alt"></i>
+        </a>
+        {% endif %}
+    </header>
+
+    {# Toast notifications #}
+    <div class="ff-toast-container" role="status" aria-live="polite">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="ff-toast ff-toast--{% if 'error' in message.tags or 'danger' in message.tags %}error{% elif 'warning' in message.tags %}warning{% elif 'info' in message.tags %}info{% else %}success{% endif %}" data-dismiss="6000">
+                    <i class="fas fa-{% if 'error' in message.tags or 'danger' in message.tags %}exclamation-circle{% elif 'warning' in message.tags %}exclamation-triangle{% elif 'info' in message.tags %}info-circle{% else %}check-circle{% endif %}"></i>
+                    <span>{{ message }}</span>
+                    <button class="ff-toast-close" aria-label="Fermer">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if custom_notifications %}
+            {% for notification in custom_notifications %}
+                <div class="ff-toast ff-toast--{{ notification.type|default:'info' }}" data-dismiss="6000">
+                    <i class="fas fa-info-circle"></i>
+                    <span>{{ notification.text|safe }}</span>
+                    <button class="ff-toast-close" aria-label="Fermer">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <main class="ff-main{% if not user.is_authenticated %} ff-main--auth{% endif %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% if user.is_authenticated %}
+    {# Bottom navigation #}
+    <nav class="ff-bottom-nav" aria-label="Navigation principale">
+        <a href="{% url 'accueil' %}" class="ff-nav-item {% if request.resolver_match.url_name == 'accueil' %}active{% endif %}">
+            <span class="ff-nav-icon"><i class="fas fa-home"></i></span>
+            <span class="ff-nav-label">Accueil</span>
+        </a>
+        <a href="{% url 'packs' %}" class="ff-nav-item {% if request.resolver_match.url_name == 'packs' or request.resolver_match.url_name == 'buy-pack' or request.resolver_match.url_name == 'buy-pack-global' %}active{% endif %}">
+            <span class="ff-nav-icon"><i class="fas fa-box"></i></span>
+            <span class="ff-nav-label">Packs</span>
+        </a>
+        <a href="{% url 'depot' %}" class="ff-nav-item ff-nav-item--center {% if request.resolver_match.url_name == 'depot' %}active{% endif %}">
+            <span class="ff-nav-icon ff-nav-icon--center"><i class="fas fa-plus"></i></span>
+            <span class="ff-nav-label">Recharge</span>
+        </a>
+        <a href="{% url 'parrainage' %}" class="ff-nav-item {% if request.resolver_match.url_name == 'mes-packs' %}active{% endif %}">
+            <span class="ff-nav-icon"><i class="fas fa-handshake"></i></span>
+            <span class="ff-nav-label">Parrainage</span>
+        </a>
+        <a href="{% url 'compte' %}" class="ff-nav-item {% if request.resolver_match.url_name == 'compte' %}active{% endif %}">
+            <span class="ff-nav-icon"><i class="fas fa-user"></i></span>
+            <span class="ff-nav-label">Compte</span>
+        </a>
+    </nav>
+
+    {# History drawer #}
+    <div class="ff-drawer-overlay" id="ffDrawerOverlay"></div>
+    <aside class="ff-drawer" id="ffDrawer" aria-label="Menu historique">
+        <button class="ff-modal-close" id="ffDrawerClose" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        <p class="ff-drawer-title">Compte & Historique</p>
+        <a href="{% url 'mes-depots' %}" class="ff-drawer-link">
+            <i class="fas fa-receipt"></i> Mes recharges
+        </a>
+        <a href="{% url 'mes-retraits' %}" class="ff-drawer-link">
+            <i class="fas fa-money-bill-alt"></i> Mes retraits
+        </a>
+        <a href="{% url 'mes-packs' %}" class="ff-drawer-link">
+            <i class="fas fa-box-open"></i> Packs actifs
+        </a>
+        <a href="{% url 'compte' %}" class="ff-drawer-link">
+            <i class="fas fa-user-cog"></i> Mon compte
+        </a>
+        <a href="{% url 'parrainage' %}" class="ff-drawer-link">
+            <i class="fas fa-handshake"></i> Parrainage
+        </a>
+        <a href="{% url 'politique' %}" class="ff-drawer-link">
+            <i class="fas fa-shield-alt"></i> Politique de confidentialité
+        </a>
+        
+        <a href="{% url 'logout' %}" class="ff-drawer-link ff-drawer-link--danger">
+            <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </a>
+    </aside>
+    {% endif %}
+
+</div>
+
+<script src="{% static 'finance/js/app.js' %}" defer></script>
+<script>
+    document.getElementById('ffNavHistory')?.addEventListener('click', function () {
+        document.getElementById('ffDrawer')?.classList.add('active');
+        document.getElementById('ffDrawerOverlay')?.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+</script>
+{% if user.is_authenticated %}
+<!-- Floating service client button (global) -->
+<button class="ff-float-btn" id="ffFloatClientBtn" aria-label="Service client" onclick="ffOpenModal('client')">
+    <span class="ff-float-icon"><i class="fas fa-headset"></i></span>
+    <span class="ff-float-label">Service client</span>
+</button>
+{% endif %}
+{% block extra_js %}{% endblock %}
+</body>
+</html>

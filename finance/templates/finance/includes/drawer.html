@@ -1,0 +1,26 @@
+<div class="ff-drawer-overlay" id="ffDrawerOverlay"></div>
+<aside class="ff-drawer" id="ffDrawer" aria-label="Menu historique">
+    <button type="button" class="ff-modal-close" id="ffDrawerClose" aria-label="Fermer"><i class="fas fa-times"></i></button>
+    <p class="ff-drawer-title">Compte & Historique</p>
+    <a href="{% url 'mes-depots' %}" class="ff-drawer-link">
+        <i class="fas fa-receipt"></i> Mes recharges
+    </a>
+    <a href="{% url 'mes-retraits' %}" class="ff-drawer-link">
+        <i class="fas fa-money-bill-alt"></i> Mes retraits
+    </a>
+    <a href="{% url 'mes-packs' %}" class="ff-drawer-link">
+        <i class="fas fa-box-open"></i> Packs actifs
+    </a>
+    <a href="{% url 'compte' %}" class="ff-drawer-link">
+        <i class="fas fa-user-cog"></i> Mon compte
+    </a>
+    <a href="{% url 'parrainage' %}" class="ff-drawer-link">
+        <i class="fas fa-handshake"></i> Parrainage
+    </a>
+    <a href="{% url 'politique' %}" class="ff-drawer-link">
+        <i class="fas fa-shield-alt"></i> Politique de confidentialité
+    </a>
+    <a href="{% url 'logout' %}" class="ff-drawer-link ff-drawer-link--danger">
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+    </a>
+</aside>

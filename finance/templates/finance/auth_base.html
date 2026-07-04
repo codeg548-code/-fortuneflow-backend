@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>{% block title %}FortuneFlow | Connexion{% endblock %}</title>
+    {% include "finance/includes/head.html" %}
+    {% block style %}{% endblock %}
+</head>
+<body>
+<div class="ff-app">
+
+    <header class="ff-header">
+        <a href="{% url 'login' %}" class="ff-logo" aria-label="FortuneFlow">
+            <span class="ff-logo-icon"><i class="fas fa-chart-line"></i></span>
+            <span class="ff-logo-text">FortuneFlow</span>
+        </a>
+    </header>
+
+    {% include "finance/includes/toasts.html" %}
+
+    <main class="ff-main ff-main--auth">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+<script src="{% static 'finance/js/app.js' %}" defer></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

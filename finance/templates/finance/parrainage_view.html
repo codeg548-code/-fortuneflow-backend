@@ -1,0 +1,67 @@
+{% extends "finance/base.html" %}
+
+{% block title %}Parrainage professionnel — FortuneFlow{% endblock %}
+
+{% block content %}
+<section class="ff-panel ff-section--referral">
+    <div class="ff-section__head">
+        <h1>Parrainage professionnel</h1>
+        <p class="ff-section__desc">Invitez et suivez vos filleuls — visualisez leurs investissements et les montants rapportés.</p>
+        <div class="ff-copy-link">
+            <strong>Lien de parrainage :</strong>
+            <code>{{ parrainage_link }}</code>
+        </div>
+    </div>
+
+    <div class="ff-stats-row">
+        <div class="ff-stat-card">
+            <span class="ff-stat-value">{{ parrainage_count }}</span>
+            <span class="ff-stat-label">Filleuls</span>
+        </div>
+        <div class="ff-stat-card ff-stat-card--success">
+            <span class="ff-stat-value">{{ total_invested_all|default:0 }}</span>
+            <span class="ff-stat-label">Investi par les filleuls (FCFA)</span>
+        </div>
+        <div class="ff-stat-card ff-stat-card--warning">
+            <span class="ff-stat-value">—</span>
+            <span class="ff-stat-label">Montant rapporté (FCFA)</span>
+        </div>
+    </div>
+
+    {% if filleuls %}
+        <div class="ff-card ff-card--flush">
+            <div class="ff-table-wrap">
+                <table class="ff-table" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Filleul</th>
+                            <th>Organisation / Packs</th>
+                            <th>Investi (FCFA)</th>
+                            <th>Montant rapporté (FCFA)</th>
+                            <th>Commission</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in filleuls %}
+                        <tr>
+                            <td>
+                                <strong>{{ f.nom }}</strong><br>
+                                <small class="ff-link-muted">{{ f.numero }}</small>
+                            </td>
+                            <td>{{ f.packs }}</td>
+                            <td>{{ f.invested|default:0 }}</td>
+                            <td>{{ f.reported|default:0 }}</td>
+                            <td>{% if f.commission_verssee %}<span class="text-success">Versée</span>{% else %}<span class="text-warning">En attente</span>{% endif %}</td>
+                            <td>{{ f.date_creation|date:'d/m/Y' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p>Aucun filleul pour le moment. Partagez votre lien de parrainage pour commencer.</p>
+    {% endif %}
+</section>
+{% endblock %}

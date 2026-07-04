@@ -1,0 +1,23 @@
+{% load nav_tags %}
+<nav class="ff-bottom-nav" aria-label="Navigation principale">
+    <a href="{% url 'accueil' %}" class="ff-nav-item {% nav_active 'accueil' %}">
+        <span class="ff-nav-icon"><i class="fas fa-home"></i></span>
+        <span class="ff-nav-label">Accueil</span>
+    </a>
+    <a href="{% url 'packs' %}" class="ff-nav-item {% nav_active 'packs' %}">
+        <span class="ff-nav-icon"><i class="fas fa-gem"></i></span>
+        <span class="ff-nav-label">Packs</span>
+    </a>
+    <a href="{% url 'depot' %}" class="ff-nav-item ff-nav-item--center {% nav_active 'depot' %}">
+        <span class="ff-nav-icon ff-nav-icon--center"><i class="fas fa-wallet"></i></span>
+        <span class="ff-nav-label">Recharge</span>
+    </a>
+    <a href="{% url 'parrainage' %}" class="ff-nav-item {% nav_active 'parrainage' %}">
+        <span class="ff-nav-icon"><i class="fas fa-handshake"></i></span>
+        <span class="ff-nav-label">Parrainage</span>
+    </a>
+    <a href="{% url 'compte' %}" class="ff-nav-item {% nav_active 'compte' %}">
+        <span class="ff-nav-icon"><i class="fas fa-user"></i></span>
+        <span class="ff-nav-label">Compte</span>
+    </a>
+</nav>

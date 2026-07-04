@@ -1,0 +1,20 @@
+<div class="ff-toast-container" role="status" aria-live="polite">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="ff-toast ff-toast--{% if 'error' in message.tags or 'danger' in message.tags %}error{% elif 'warning' in message.tags %}warning{% elif 'info' in message.tags %}info{% else %}success{% endif %}" data-dismiss="6000">
+                <i class="fas fa-{% if 'error' in message.tags or 'danger' in message.tags %}exclamation-circle{% elif 'warning' in message.tags %}exclamation-triangle{% elif 'info' in message.tags %}info-circle{% else %}check-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+                <button type="button" class="ff-toast-close" aria-label="Fermer">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if custom_notifications %}
+        {% for notification in custom_notifications %}
+            <div class="ff-toast ff-toast--{{ notification.type|default:'info' }}" data-dismiss="6000">
+                <i class="fas fa-info-circle"></i>
+                <span>{{ notification.text|safe }}</span>
+                <button type="button" class="ff-toast-close" aria-label="Fermer">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>

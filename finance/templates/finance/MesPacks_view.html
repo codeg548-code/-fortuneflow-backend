@@ -1,0 +1,61 @@
+{% extends 'finance/base.html' %}
+{% load finance_extras %}
+
+{% block title %}FortuneFlow | Packs actifs{% endblock %}
+
+{% block content %}
+<div class="ff-page">
+    {% include "finance/includes/page_header.html" with title="Packs" highlight="actifs" %}
+
+    <div class="ff-page__content">
+        <!-- <div class="ff-pack-summary">
+            <p>Voici l’état actuel de vos packs et leurs échéances de suivi.</p>
+        </div> -->
+
+        <div class="ff-pack-list">
+            {% for pack in mespacks_achats %}
+            <article class="ff-pack-card ff-pack-card--active">
+                <div class="ff-pack-img">
+                    <!-- <img src="{% pack_image pack.nom_pack %}" alt="{{ pack.nom_pack }}"> -->
+                </div>
+                <div class="ff-pack-info">
+                    <div class="ff-pack-card__header">
+                        <div>
+                            <h3 class="ff-pack-title">{{ pack.nom_pack }}</h3>
+                            <p class="ff-pack-subtitle">Pack en cours de suivi</p>
+                        </div>
+                        <span class="ff-badge {% if pack.statut == 'Actif' %}ff-badge--success{% else %}ff-badge--warning{% endif %}">{{ pack.statut }}</span>
+                    </div>
+
+                    <div class="ff-pack-metrics">
+                        <div class="ff-pack-metric">
+                            <span class="ff-pack-metric__label">Investi</span>
+                            <strong class="ff-pack-metric__value">{{ pack.montant_investi }} F</strong>
+                        </div>
+                        <div class="ff-pack-metric">
+                            <span class="ff-pack-metric__label">Profit total</span>
+                            <strong class="ff-pack-metric__value">{{ pack.montant_total_profit }} F</strong>
+                        </div>
+                        <div class="ff-pack-metric">
+                            <span class="ff-pack-metric__label">Date d'achat</span>
+                            <strong class="ff-pack-metric__value">{{ pack.date_achat|date:"d/m/Y" }}</strong>
+                        </div>
+                        <div class="ff-pack-metric">
+                            <span class="ff-pack-metric__label">Échéance</span>
+                            <strong class="ff-pack-metric__value">{% if pack.date_expiration %}{{ pack.date_expiration|date:"d/m/Y" }}{% else %}Non définie{% endif %}</strong>
+                        </div>
+                    </div>
+
+                    <div class="ff-pack-footer">
+                        <p class="ff-pack-status">{{ pack.temps_affichage }}</p>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            {% url 'packs' as packs_url %}
+            {% include "finance/includes/empty_state.html" with icon="box-open" message="Aucun pack actif pour le moment." action_url=packs_url action_label="Voir les packs" %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

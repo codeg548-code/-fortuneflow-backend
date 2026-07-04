@@ -1,0 +1,91 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+{% block title %}Mon compte — FortuneFlow{% endblock %}
+
+{% block content %}
+<section class="ff-panel">
+    <div class="ff-account-hero">
+        <div class="ff-account-hero__top">
+                <div class="ff-account-hero__avatar"><i class="fas fa-user"></i></div>
+                <div>
+                    <h2 class="ff-account-hero__name">{{ client.nomClt|default:'Votre compte' }}</h2>
+                    <div class="ff-account-hero__meta">Numéro : {{ numero_display }}</div>
+                </div>
+            </div>
+
+            <div class="ff-account-hero__balances">
+                <div class="ff-account-balance">
+                    <span class="ff-account-balance__label">Solde actuel</span>
+                    <div class="ff-account-balance__value">{{ solde_display|default:0 }} <small>FCFA</small></div>
+                </div>
+                <div class="ff-account-balance">
+                    <span class="ff-account-balance__label">Revenu total</span>
+                    <div class="ff-account-balance__value">{{ revenu_display|default:0 }} <small>FCFA</small></div>
+                </div>
+            </div>
+
+        <p class="ff-section__desc">Gérez vos informations personnelles et consultez votre moyen de paiement.</p>
+
+    {% include "finance/includes/identity_card.html" with icon="wallet" label="Moyen de paiement" rows=payment_rows %}
+
+    <p class="ff-hint">Ces informations sont verrouillées pour des raisons de sécurité.</p>
+    <div class="ff-actions" style="display:flex;gap:0.75rem;margin-top:1rem;">
+        {% if not payment_complete %}
+            <button type="button" class="ff-btn ff-btn-primary" onclick="ffOpenModal('modal_edit_payment')">Mes informations</button>
+        {% else %}
+            <button type="button" class="ff-btn ff-btn-secondary" disabled>Informations verrouillées</button>
+        {% endif %}
+        <!-- <button type="button" class="ff-btn ff-btn-secondary" onclick="ffOpenModal('client')">Contacter le service client</button> -->
+        <a href="{% url 'parrainage' %}" class="ff-btn ff-btn-primary">parrainage</a>
+    </div>
+
+    {# Modal d'édition des infos de paiement (affiché si incomplet) #}
+    <div class="ff-overlay" id="modal_edit_payment">
+        <div class="ff-modal">
+            <button type="button" class="ff-modal-close" data-ff-close="modal_edit_payment" aria-label="Fermer"><i class="fas fa-times"></i></button>
+            <p class="ff-modal-title">Compléter vos informations de paiement</p>
+            <form method="post" class="ff-form">
+                {% csrf_token %}
+                <label class="ff-field">
+                    <span>Moyen de paiement</span>
+                    <select name="moyen_paiement">
+                        <option value="MTN" {% if client.moyen_paiement == 'MTN' %}selected{% endif %}>MTN Mobile Money</option>
+                        <option value="ORANGE" {% if client.moyen_paiement == 'ORANGE' %}selected{% endif %}>Orange Money</option>
+                        <option value="BANK" {% if client.moyen_paiement == 'BANK' %}selected{% endif %}>Virement bancaire</option>
+                    </select>
+                </label>
+                <label class="ff-field">
+                    <span>Nom du bénéficiaire</span>
+                    <input type="text" name="nom_beneficiaire" value="{{ client.nom_beneficiaire }}">
+                </label>
+                <label class="ff-field">
+                    <span>Numéro de portefeuille</span>
+                    <input type="text" name="numero_portefeuille" value="{{ client.numero_portefeuille }}">
+                </label>
+                <div style="display:flex;gap:0.75rem;margin-top:1rem;">
+                    <button type="submit" class="ff-btn ff-btn-primary">Enregistrer</button>
+                    <button type="button" class="ff-btn ff-btn-secondary" data-ff-close="modal_edit_payment">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# Modal service client (copie légère) #}
+    <!-- <div class="ff-overlay" id="client">
+        <div class="ff-modal">
+            <button type="button" class="ff-modal-close" data-ff-close="client" aria-label="Fermer"><i class="fas fa-times"></i></button>
+            <p class="ff-modal-title">Contactez le service client</p>
+            <div class="ff-service-grid">
+                <a href="https://t.me/672870153" target="_blank" rel="noopener">
+                    <img src="{% static 'finance/images/telegram.jpg' %}" alt="Telegram">
+                </a>
+                <a href="https://wa.me/672870153" target="_blank" rel="noopener">
+                    <img src="{% static 'finance/images/whatsapp.jpg' %}" alt="WhatsApp">
+                </a>
+            </div>
+        </div>
+    </div> -->
+
+</section>
+{% endblock %}

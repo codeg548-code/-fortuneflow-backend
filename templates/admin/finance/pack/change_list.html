@@ -1,0 +1,32 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+  <div style="padding:12px;border:1px solid #e1e1e1;border-radius:6px;min-width:180px;">
+    <h4 style="margin:0 0 8px 0">Total packs</h4>
+    <p style="font-size:20px;margin:0">{{ total_packs }}</p>
+  </div>
+  <div style="padding:12px;border:1px solid #e1e1e1;border-radius:6px;min-width:180px;">
+    <h4 style="margin:0 0 8px 0">Stock initial total</h4>
+    <p style="font-size:20px;margin:0">{{ total_stock_initial }}</p>
+  </div>
+  <div style="padding:12px;border:1px solid #e1e1e1;border-radius:6px;min-width:180px;">
+    <h4 style="margin:0 0 8px 0">Stock disponible total</h4>
+    <p style="font-size:20px;margin:0">{{ total_stock_disponible }}</p>
+  </div>
+  <div style="padding:12px;border:1px solid #e1e1e1;border-radius:6px;min-width:240px;">
+    <h4 style="margin:0 0 8px 0">Packs faible stock</h4>
+    {% if low_stock %}
+      <ul style="margin:0;padding-left:16px;">
+      {% for p in low_stock %}
+        <li>{{ p.nomPack }} — {{ p.stock_disponible }}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <div style="color:#666">Aucun pack en faible stock</div>
+    {% endif %}
+  </div>
+</div>
+
+{{ block.super }}
+{% endblock %}

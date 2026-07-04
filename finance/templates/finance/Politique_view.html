@@ -1,0 +1,28 @@
+{% extends 'finance/base.html' %}
+
+{% block title %}FortuneFlow | Politique de confidentialité{% endblock %}
+
+{% block content %}
+<div class="ff-page ff-page--form">
+    <div class="ff-form-card ff-policy">
+        <h1 class="ff-form-title">Politique de confidentialité</h1>
+
+        <p><strong>INTRODUCTION</strong></p>
+        <p>FortuneFlow est une entreprise spécialisée dans les services d'investissement en ligne. L'entreprise s'engage à protéger la confidentialité et la sécurité des informations personnelles de ses clients.</p>
+
+        <p><strong>COLLECTE D'INFORMATIONS</strong></p>
+        <p>Nom et prénom, adresse e-mail, numéro de téléphone. Ces données sont collectées lors de l'inscription, de la création d'un compte, d'une transaction ou d'une communication avec l'entreprise.</p>
+
+        <p><strong>UTILISATION DES INFORMATIONS</strong></p>
+        <p>Fournir les services d'investissement, effectuer des transactions, communiquer avec les clients, améliorer la qualité des services et prévenir la fraude.</p>
+
+        <p><strong>PROTECTION DES INFORMATIONS</strong></p>
+        <p>Cryptage des données, contrôles d'accès physiques et électroniques, formation du personnel sur les politiques de confidentialité.</p>
+
+        <p><strong>ACCEPTATION</strong></p>
+        <p>En utilisant les services de FortuneFlow, vous acceptez cette politique de confidentialité.</p>
+
+        <a href="{% url 'signup' %}" class="ff-btn ff-btn-secondary ff-mt-4">Retour à l'inscription</a>
+    </div>
+</div>
+{% endblock %}

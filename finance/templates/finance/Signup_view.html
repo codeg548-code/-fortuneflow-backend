@@ -1,0 +1,55 @@
+{% extends 'finance/auth_base.html' %}
+
+{% block title %}FortuneFlow | Créer un compte{% endblock %}
+
+{% block content %}
+<div class="ff-page ff-page--form">
+    <div class="ff-form-card">
+        <h1 class="ff-form-title">Créer un compte</h1>
+        <p class="ff-form-subtitle">Rejoignez FortuneFlow et commencez à investir</p>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="ff-form-group">
+                <label for="id_nom">Nom complet</label>
+                <input type="text" name="nom" id="id_nom" class="ff-input" placeholder="Votre nom complet" required autocomplete="name">
+            </div>
+            <div class="ff-form-group">
+                <label for="id_numero">Numéro de téléphone</label>
+                <input type="text" name="numero" id="id_numero" class="ff-input" placeholder="Ex: 670000000" required autocomplete="tel">
+            </div>
+            <div class="ff-form-group">
+                <label for="id_mdp">Mot de passe</label>
+                <div class="ff-input-wrap">
+                    <input type="password" name="mdp" id="id_mdp" class="ff-input" placeholder="Minimum 8 caractères" required autocomplete="new-password">
+                    <button type="button" class="ff-toggle-pwd" data-toggle-pwd="id_mdp" aria-label="Afficher le mot de passe">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="ff-form-group">
+                <label for="id_cmdp">Confirmer le mot de passe</label>
+                <div class="ff-input-wrap">
+                    <input type="password" name="cmdp" id="id_cmdp" class="ff-input" placeholder="Répétez le mot de passe" required autocomplete="new-password">
+                    <button type="button" class="ff-toggle-pwd" data-toggle-pwd="id_cmdp" aria-label="Afficher le mot de passe">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            {% if ref %}
+            <input type="hidden" name="parrain" value="{{ ref }}">
+            {% endif %}
+            <label class="ff-checkbox-row">
+                <input type="checkbox" name="accept_policy" id="ffPolicyCheck" required>
+                <span>J'ai lu et j'accepte la <a href="{% url 'politique' %}">politique de confidentialité</a></span>
+            </label>
+            <button type="submit" name="signup" id="ffSignBtn" class="ff-btn ff-btn-primary" disabled>
+                <i class="fas fa-user-plus"></i> S'inscrire
+            </button>
+            <p class="ff-form-footer">
+                Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock %}

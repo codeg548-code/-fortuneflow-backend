@@ -1,0 +1,50 @@
+{% extends 'finance/base.html' %}
+
+{% block title %}FortuneFlow | Mes retraits{% endblock %}
+
+{% block content %}
+<div class="ff-page">
+    {% include "finance/includes/page_header.html" with title="Mes" highlight="retraits" %}
+
+    <div class="ff-page__content">
+        <div class="ff-card ff-card--flush">
+            {% if mes_retraits %}
+            <div class="ff-table-wrap">
+                <table class="ff-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Compte</th>
+                            <th>Net</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for retrait in mes_retraits %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ retrait.numRetrait }}</td>
+                            <td>{{ retrait.montant }} F</td>
+                            <td>{{ retrait.date_creation|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if retrait.statut|lower == 'validé' or retrait.statut|lower == 'valider' %}
+                                    <span class="ff-badge ff-badge--success">Validé</span>
+                                {% elif retrait.statut|lower == 'annulé' %}
+                                    <span class="ff-badge ff-badge--error">Annulé</span>
+                                {% else %}
+                                    <span class="ff-badge ff-badge--warning">{{ retrait.statut }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            {% include "finance/includes/empty_state.html" with icon="money-bill-transfer" message="Aucun retrait enregistré pour le moment." %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

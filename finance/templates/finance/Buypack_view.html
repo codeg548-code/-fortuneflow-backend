@@ -1,0 +1,38 @@
+{% extends 'finance/base.html' %}
+
+{% block title %}FortuneFlow | Confirmer l'achat{% endblock %}
+
+{% block content %}
+<div class="ff-page ff-page--form">
+    <div class="ff-form-card">
+        <h1 class="ff-form-title">Confirmer l'investissement</h1>
+        <p class="ff-form-subtitle">Voulez-vous investir dans ce pack ?</p>
+
+        {% if not peut_acheter %}
+        <div class="ff-alert ff-alert--warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div><strong>Achat impossible</strong><p>{{ message_blocage }}</p></div>
+        </div>
+        <a href="{% url 'packs' %}" class="ff-btn ff-btn-secondary">Retour aux packs</a>
+        {% else %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <ul class="ff-confirm-list">
+                <li><span>Pack</span><span>{{ getpack.nomPack }}</span></li>
+                <li><span>Investissement</span><span>{{ getpack.montant }} F</span></li>
+                <li><span>Gain journalier</span><span>{{ getpack.gainJr }} F</span></li>
+                <li><span>Durée</span><span>{{ getpack.duree }} jours</span></li>
+                <li><span>Stock restant</span><span>{{ getpack.stock_disponible }} / {{ getpack.stock_initial }}</span></li>
+                <li><span>Votre solde</span><span>{{ client.solde }} F</span></li>
+            </ul>
+            <div class="ff-confirm-actions">
+                <button type="submit" name="annuler" class="ff-btn ff-btn-secondary">Annuler</button>
+                <button type="submit" name="valider" class="ff-btn ff-btn-primary">
+                    <i class="fas fa-check"></i> Confirmer
+                </button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

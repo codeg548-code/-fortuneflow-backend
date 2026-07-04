@@ -1,0 +1,75 @@
+{% extends 'finance/admin_base.html' %}
+
+<!-- Content Wrapper. Contains page content -->
+
+{% block title %} Wealthwise - Depot {% endblock%} 
+{% block pageTitle %} Liste des DEPOTS {% endblock %} 
+{% block pageTitle2 %} DEPOTS {% endblock %} 
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+
+        <div class="form-group d-flex mb-0">
+            <label class="mt-2 mr-3">Trier :</label>
+            <select class="form-control col-3">
+                <option value="">Tous</option>
+                <option value="">en attente</option>
+                <option value="">Annulé</option>
+                <option value="">Validé</option>
+            </select>            
+        </div>
+    
+    </div>
+
+    <!-- /.card-header -->
+    <div class="card-body">
+    <table id="example1" class="table table-bordered table-hover mt-2">
+      <thead class="bg-dark">
+        <tr>
+          <th>idTransaction</th>
+          <th>Nom(s)</th>
+          <th>Numero</th>
+          <th>Montant</th>
+          <th>Statut</th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+    <tbody>
+        {% for res in result %}
+
+            <tr>
+                <td>{{ res.idTransaction }}</td>
+                <td>{{ res.nomNum }}</td>
+                <td>{{ res.numDepot }}</td>
+                <td>{{ res.montant }}</td>
+                <td>
+                    {% if res.statut|lower == 'validé' %}
+                        <strong class="badge badge-success col-12">Validé</strong>
+                    {% elif res.statut|lower == 'annulé' %}
+                        <strong class="badge badge-danger col-12">Annulé</strong>
+                    {% else %}
+                        <strong class="badge badge-warning col-12">En attente</strong>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if res.statut|lower == 'en attente' %}
+                        <a href="{% url 'valider_depot_action' codeDepot=res.codeDepot %}"><button class="col-12 btn btn-success">Valider</button></a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% empty %}
+                <tr style="text-align: center; margin-top: 50px;">Aucun dépôt en attente de validation.</tr>
+        {% endfor %}
+        
+    </tbody>
+</table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+{% endblock %}
+
+

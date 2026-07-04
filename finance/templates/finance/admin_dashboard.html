@@ -1,0 +1,92 @@
+{% extends 'finance/admin_base.html' %}
+
+<!-- Content Wrapper. Contains page content -->
+
+{% block title %} WealthWise - Tableau de Bord {% endblock%} 
+
+
+{% block pageTitle %} Tableau de Bord {% endblock %}
+
+{% block pageTitle2 %} Tableau de Bord {% endblock %}
+
+{% block content %}
+<!-- Small boxes (Stat box) -->
+<div class="row">
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3>{{ all_depots }}</h3>
+
+        <p>Dépôts</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-bag"></i>
+      </div>
+      <a href="{% url 'valider-depot' %}" class="small-box-footer"
+        >More info <i class="fas fa-arrow-circle-right"></i
+      ></a>
+    </div>
+  </div>
+
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3>{{ all_retraits }}</h3>
+
+        <p>Retraits</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-stats-bars"></i>
+      </div>
+      <a href="{% url 'valider-retrait' %}" class="small-box-footer"
+        >More info <i class="fas fa-arrow-circle-right"></i
+      ></a>
+    </div>
+  </div>
+
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3>{{ total_clients }}</h3>
+        <p>Utilisateurs</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-person-add"></i>
+      </div>
+      <a href="{% url 'admin-users' %}" class="small-box-footer"
+        >More info <i class="fas fa-arrow-circle-right"></i
+      ></a>
+    </div>
+  </div>
+  <!-- ./col -->
+
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3>{{ total_revenue }} <span>FCFA</span></h3>
+
+        <p>Revenu Généré </p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-pie-graph"></i>
+        </div>
+        <a href="#" class="small-box-footer">All generated</i></a>
+    </div>
+  </div>
+  <!-- ./col -->
+</div>
+<!-- /.row -->
+
+<!-- Main row -->
+<div class="row">
+    
+</div>
+<!-- /.row (main row) -->
+
+{% endblock %}

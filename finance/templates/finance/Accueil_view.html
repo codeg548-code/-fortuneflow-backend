@@ -1,0 +1,160 @@
+{% extends 'finance/base.html' %}
+{% load static %}
+
+{% block title %}FortuneFlow | Accueil{% endblock %}
+
+{% block content %}
+<div class="ff-page ff-page--dashboard">
+
+    <div class="ff-wallet">
+        <div class="ff-wallet-user">
+            <div class="ff-avatar"><i class="fas fa-user"></i></div>
+            <div>
+                <div class="ff-wallet-name">{{ nom }}</div>
+                <div class="ff-wallet-phone">{{ numero }}</div>
+            </div>
+        </div>
+
+        <div class="ff-balance-grid">
+            <div class="ff-balance-item">
+                <label>Solde actuel</label>
+                <div class="ff-balance-value">{{ solde|default:"0" }}</div>
+                <div class="ff-balance-unit">FCFA</div>
+            </div>
+            <div class="ff-balance-item">
+                <label>Revenu total</label>
+                <div class="ff-balance-value">{{ revenu|default:"0" }}</div>
+                <div class="ff-balance-unit">FCFA</div>
+            </div>
+        </div>
+
+        <div class="ff-wallet-actions">
+            <a href="{% url 'depot' %}" type="button" class="ff-btn ff-btn-primary">
+                <i class="fas fa-plus"></i> Recharger
+            </a>
+            <!-- <button type="button" class="ff-btn ff-btn-primary" id="initdepot">
+                <i class="fas fa-plus"></i> Recharger
+            </button> -->
+            <a href="{% url 'retrait' %}" class="ff-btn ff-btn-secondary">
+                <i class="fas fa-arrow-up"></i> Retirer
+            </a>
+        </div>
+    </div>
+
+    <div class="ff-card">
+        <p class="ff-card-title">Actions rapides</p>
+        <div class="ff-actions-grid">
+            <a href="{% url 'mes-depots' %}" class="ff-action-item">
+                <div class="ff-action-icon"><img src="{% static 'finance/images/mesdepots.png' %}" alt=""></div>
+                <span class="ff-action-label">Mes<br>Recharges</span>
+            </a>
+            <button type="button" class="ff-action-item" id="parrainer">
+                <div class="ff-action-icon"><img src="{% static 'finance/images/group.png' %}" alt="Inviter"></div>
+                <span class="ff-action-label">Inviter<br>& Gagner</span>
+            </button>
+            <a href="{% url 'packs' %}" class="ff-action-item">
+                <div class="ff-action-icon"><img src="{% static 'finance/images/achatpack.png' %}" alt=""></div>
+                <span class="ff-action-label">Achat<br>Pack</span>
+            </a>
+            <a href="{% url 'mes-packs' %}" class="ff-action-item">
+                <div class="ff-action-icon"><img src="{% static 'finance/images/mespacks.png' %}" alt=""></div>
+                <span class="ff-action-label">Packs<br>Actifs</span>
+            </a>
+            <a href="{% url 'mes-retraits' %}" class="ff-action-item">
+                <div class="ff-action-icon"><img src="{% static 'finance/images/mesretraits.png' %}" alt=""></div>
+                <span class="ff-action-label">Mes<br>Retraits</span>
+            </a>
+            <button type="button" class="ff-action-item" id="service">
+                <div class="ff-action-icon"><img src="{% static 'finance/images/client.png' %}" alt="Service client"></div>
+                <span class="ff-action-label">Service<br>Client</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+{# Modals #}
+<div class="ff-overlay" id="popupreseau">
+    <div class="ff-modal">
+        <button type="button" class="ff-modal-close" data-ff-close="popupreseau" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        <p class="ff-modal-title">Sélectionner un opérateur</p>
+        <div class="ff-operator-grid">
+            <img src="{% static 'finance/images/mtn.jpg' %}" id="mtn" alt="MTN MoMo">
+            <img src="{% static 'finance/images/orange.jpg' %}" id="orange" alt="Orange Money">
+        </div>
+    </div>
+</div>
+
+<div class="ff-overlay" id="popupshowreseau_1">
+    <div class="ff-modal">
+        <button type="button" class="ff-modal-close" data-ff-close="popupshowreseau_1" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        <p class="ff-modal-title">Recharger via MTN MoMo</p>
+        <div class="ff-modal-body">
+            <p><strong>Réseau :</strong> MTN MoMo</p>
+            <p><strong>Nom :</strong> FortuneFlow</p>
+            <p><strong>Numéro :</strong> 123456789</p>
+            <p><strong>Référence :</strong> 0000</p>
+        </div>
+        <a href="{% url 'depot' %}" class="ff-btn ff-btn-primary ff-mt-4">Continuer le dépôt</a>
+    </div>
+</div>
+
+<div class="ff-overlay" id="popupshowreseau_2">
+    <div class="ff-modal">
+        <button type="button" class="ff-modal-close" data-ff-close="popupshowreseau_2" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        <p class="ff-modal-title">Recharger via Orange Money</p>
+        <div class="ff-modal-body">
+            <p><strong>Réseau :</strong> Orange OM</p>
+            <p><strong>Nom :</strong> FortuneFlow</p>
+            <p><strong>Numéro :</strong> 123456789</p>
+            <p><strong>Référence :</strong> 0000</p>
+        </div>
+        <a href="{% url 'depot' %}" class="ff-btn ff-btn-primary ff-mt-4">Continuer le dépôt</a>
+    </div>
+</div>
+
+<div class="ff-overlay" id="popup_parrain">
+    <div class="ff-modal">
+        <button type="button" class="ff-modal-close" data-ff-close="popup_parrain" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        <p class="ff-modal-title">Invitez & gagnez un bonus</p>
+        <div class="ff-modal-body">
+            <p>Partagez ce lien et recevez 5% de commission sur le premier achat de pack de chaque filleul.</p>
+            <div class="ff-ref-link" id="lien-a-copier">{{ HOST }}</div>
+        </div>
+        <button type="button" class="ff-btn ff-btn-success" onclick="ffCopyText('lien-a-copier')">
+            <i class="fas fa-copy"></i> Copier le lien
+        </button>
+    </div>
+</div>
+
+<div class="ff-overlay" id="client">
+    <div class="ff-modal">
+        <button type="button" class="ff-modal-close" data-ff-close="client" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        <p class="ff-modal-title">Contactez le service client</p>
+        <div class="ff-service-grid">
+            <a href="https://t.me/672870153" target="_blank" rel="noopener">
+                <img src="{% static 'finance/images/telegram.jpg' %}" alt="Telegram">
+            </a>
+            <a href="https://wa.me/672870153" target="_blank" rel="noopener">
+                <img src="{% static 'finance/images/whatsapp.jpg' %}" alt="WhatsApp">
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('initdepot')?.addEventListener('click', () => ffOpenModal('popupreseau'));
+    document.getElementById('mtn')?.addEventListener('click', () => {
+        ffCloseModal('popupreseau');
+        ffOpenModal('popupshowreseau_1');
+    });
+    document.getElementById('orange')?.addEventListener('click', () => {
+        ffCloseModal('popupreseau');
+        ffOpenModal('popupshowreseau_2');
+    });
+    document.getElementById('parrainer')?.addEventListener('click', () => ffOpenModal('popup_parrain'));
+    document.getElementById('service')?.addEventListener('click', () => ffOpenModal('client'));
+</script>
+{% endblock %}

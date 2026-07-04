@@ -1,0 +1,45 @@
+{% extends "finance/base.html" %}
+
+{% block title %}Suspensions de retrait — FortuneFlow{% endblock %}
+
+{% block content %}
+<section class="ff-panel">
+    <h1>Suspensions de retrait</h1>
+    <p>Consultez l'état des suspensions de retrait pour les clients.</p>
+
+    {% if suspensions %}
+        <table class="ff-table">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Numéro</th>
+                    <th>Début de suspension</th>
+                    <th>Fin de suspension</th>
+                    <th>Raison</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for suspension in suspensions %}
+                    <tr>
+                        <td>{{ suspension.client.nomClt }}</td>
+                        <td>{{ suspension.client.numero }}</td>
+                        <td>{{ suspension.suspension_start|date:'d/m/Y' }}</td>
+                        <td>{{ suspension.suspension_end|date:'d/m/Y' }}</td>
+                        <td>{{ suspension.reason }}</td>
+                        <td>
+                            {% if suspension.is_active %}
+                                <span class="text-danger">Active</span>
+                            {% else %}
+                                <span class="text-success">Expirée</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune suspension de retrait enregistrée.</p>
+    {% endif %}
+</section>
+{% endblock %}

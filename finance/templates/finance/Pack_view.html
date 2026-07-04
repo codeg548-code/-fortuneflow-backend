@@ -1,0 +1,64 @@
+{% extends 'finance/base.html' %}
+{% load static finance_extras %}
+
+{% block title %}FortuneFlow | Packs{% endblock %}
+
+{% block content %}
+<div class="ff-page">
+    {% include "finance/includes/page_header.html" with title="Packs" highlight="disponibles" subtitle="Stock limité —
+    disponibilité en temps réel." %}
+
+    <div class="ff-page__content">
+        <div class="ff-pack-list">
+            {% for item in packs_detail %}
+            {% with pack_obj=item.pack %}
+            <article class="ff-pack-card {% if not item.peut_acheter %}ff-pack-card--disabled{% endif %}">
+                <div class="ff-pack-img">
+                    <!-- <img src="{% pack_image pack_obj.nomPack %}" alt="{{ pack_obj.nomPack }}"> -->
+                    <h3>{{ pack_obj.nomPack }}</h3>
+                </div>
+                <div class="ff-pack-info">
+                    <div class="ff-pack-name-row">
+                        <strong>{{ pack_obj.nomPack }}</strong>
+                        {% if item.deja_achete %}
+                        <span class="ff-badge ff-badge--success">Acheté</span>
+                        {% elif not item.est_en_stock %}
+                        <span class="ff-badge ff-badge--error">Épuisé</span>
+                        {% endif %}
+                    </div>
+                    <div>Prix : <strong>{{ pack_obj.montant }} F</strong></div>
+                    <div>Revenu : <strong>{{ pack_obj.gainJr }} F/jr</strong></div>
+                    <div>Durée : <strong>{{ pack_obj.duree }} jours</strong></div>
+                    <div class="ff-pack-stock">
+                        <span>Disponibles : <strong>{{ item.stock_disponible|default:'—' }}</strong> / {{
+                            item.stock_initial|default:'—' }}</span>
+                        <span class="ff-stock-bar" aria-hidden="true">
+                            <span class="ff-stock-bar__fill"
+                                style="width: {% if item.stock_initial %}{% widthratio item.stock_disponible|default:0 item.stock_initial 100 %}{% else %}0{% endif %}%">
+                            </span>
+                        </span>
+                    </div>
+                    {% if item.message_blocage %}
+                    <p class="ff-pack-notice">{{ item.message_blocage }}</p>
+                    {% endif %}
+                </div>
+                <div class="ff-pack-buy">
+                    {% if item.peut_acheter and user.is_authenticated %}
+                    <a href="{% url 'buy-pack' pack_id=pack_obj.codePack %}"
+                        aria-label="Acheter {{ pack_obj.nomPack }}">
+                        <img src="{% static 'finance/images/acheterpack.png' %}" alt="Acheter">
+                    </a>
+                    {% else %}
+                    <span class="ff-pack-buy--disabled" aria-hidden="true"><i class="fas fa-lock"></i></span>
+                    {% endif %}
+                </div>
+            </article>
+            {% endwith %}
+            {% empty %}
+            {% include "finance/includes/empty_state.html" with icon="box-open" message="Aucun pack d'investissement
+            disponible pour le moment." %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,134 @@
+/* FortuneFlow — Bottom navigation */
+
+.ff-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    transition: var(--transition);
+}
+
+.ff-nav-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ff-nav-item--center {
+    position: relative;
+    top: -0.625rem;
+}
+
+.ff-nav-icon--center {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent), #d4940a);
+    color: #1a1000;
+    box-shadow: 0 4px 16px var(--color-accent-glow);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.ff-nav-item--center .ff-nav-label {
+    color: var(--color-accent-soft);
+    font-weight: 700;
+}
+
+.ff-nav-item--center.active .ff-nav-icon--center {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px var(--color-accent-glow);
+}
+
+.ff-nav-item--center.active::before {
+    display: none;
+}
+
+.ff-nav-item.active .ff-nav-icon:not(.ff-nav-icon--center) {
+    color: var(--color-accent);
+}
+
+.ff-bottom-nav {
+    padding-top: var(--space-1);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Pack stock indicator */
+.ff-pack-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.ff-pack-stock {
+    margin-top: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.ff-stock-bar {
+    display: block;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-pill);
+    margin-top: var(--space-1);
+    overflow: hidden;
+}
+
+.ff-stock-bar__fill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-teal), var(--color-accent));
+    border-radius: var(--radius-pill);
+    transition: width 0.3s ease;
+}
+
+.ff-pack-notice {
+    font-size: var(--text-xs);
+    color: var(--color-warning);
+    margin-top: var(--space-2);
+}
+
+.ff-pack-card--disabled {
+    opacity: 0.72;
+}
+
+.ff-pack-card--disabled .ff-pack-buy img {
+    filter: grayscale(1);
+    opacity: 0.35;
+}
+
+.ff-pack-buy--disabled {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 3rem;
+    color: var(--color-text-dim);
+    font-size: var(--text-lg);
+}
+
+.ff-btn--inline {
+    width: auto;
+    min-width: 10rem;
+}
+
+@media (max-width: 359px) {
+    .ff-nav-label {
+        font-size: 0.5625rem;
+    }
+
+    .ff-nav-icon--center {
+        width: 2.625rem;
+        height: 2.625rem;
+    }
+}

@@ -1,0 +1,35 @@
+{% extends 'finance/auth_base.html' %}
+
+{% block title %}FortuneFlow | Connexion{% endblock %}
+
+{% block content %}
+<div class="ff-page ff-page--form">
+    <div class="ff-form-card">
+        <h1 class="ff-form-title">Bon retour</h1>
+        <p class="ff-form-subtitle">Connectez-vous à votre compte FortuneFlow</p>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="ff-form-group">
+                <label for="id_numero">Numéro de téléphone</label>
+                <input type="text" name="numero" id="id_numero" class="ff-input" placeholder="Ex: 670000000" required autocomplete="tel">
+            </div>
+            <div class="ff-form-group">
+                <label for="id_mdp">Mot de passe</label>
+                <div class="ff-input-wrap">
+                    <input type="password" name="mdp" id="id_mdp" class="ff-input" placeholder="Votre mot de passe" required autocomplete="current-password">
+                    <button type="button" class="ff-toggle-pwd" data-toggle-pwd="id_mdp" aria-label="Afficher le mot de passe">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" name="login" class="ff-btn ff-btn-primary ff-mt-4">
+                <i class="fas fa-sign-in-alt"></i> Se connecter
+            </button>
+            <p class="ff-form-footer">
+                Pas encore de compte ? <a href="{% url 'signup' %}">Créer un compte</a>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'finance/base.html' %}
+
+{% block title %}FortuneFlow | Mes recharges{% endblock %}
+
+{% block content %}
+<div class="ff-page">
+    {% include "finance/includes/page_header.html" with title="Mes" highlight="recharges" %}
+
+    <div class="ff-page__content">
+        <div class="ff-card ff-card--flush">
+            {% if mesdepots %}
+            <div class="ff-table-wrap">
+                <table class="ff-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Compte</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for depot in mesdepots %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ depot.numDepot|default:"N/A" }}</td>
+                            <td>{{ depot.montant }} F</td>
+                            <td>{{ depot.date_creation|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if depot.statut == 'validé' %}
+                                    <span class="ff-badge ff-badge--success">Validé</span>
+                                {% elif depot.statut == 'annulé' %}
+                                    <span class="ff-badge ff-badge--error">Annulé</span>
+                                {% else %}
+                                    <span class="ff-badge ff-badge--warning">En attente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            {% url 'depot' as depot_url %}
+            {% include "finance/includes/empty_state.html" with icon="receipt" message="Aucun dépôt trouvé pour ce compte." action_url=depot_url action_label="Recharger" %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

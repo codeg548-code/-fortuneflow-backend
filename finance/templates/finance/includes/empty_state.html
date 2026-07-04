@@ -1,0 +1,8 @@
+<div class="ff-empty">
+    {% if icon %}<i class="fas fa-{{ icon }}"></i>{% endif %}
+    <p>{{ message }}</p>
+    {% if detail %}<p class="ff-page-subtitle">{{ detail }}</p>{% endif %}
+    {% if action_url and action_label %}
+    <a href="{{ action_url }}" class="ff-btn ff-btn-primary">{{ action_label }}</a>
+    {% endif %}
+</div>

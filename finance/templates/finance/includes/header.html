@@ -1,0 +1,15 @@
+<header class="ff-header">
+    <a href="{% if user.is_authenticated %}{% url 'accueil' %}{% else %}{% url 'login' %}{% endif %}" class="ff-logo" aria-label="FortuneFlow — Accueil">
+        <span class="ff-logo-icon"><i class="fas fa-chart-line"></i></span>
+        <span class="ff-logo-text">FortuneFlow</span>
+    </a>
+    {% if user.is_authenticated %}
+    <button type="button" class="ff-header-btn" id="ffDrawerBtn" aria-label="Menu compte et historique">
+        <i class="fas fa-ellipsis-v"></i>
+    </button>
+    {% else %}
+    <a href="{% url 'login' %}" class="ff-header-btn" aria-label="Se connecter">
+        <i class="fas fa-sign-in-alt"></i>
+    </a>
+    {% endif %}
+</header>

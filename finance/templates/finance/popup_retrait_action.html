@@ -1,0 +1,83 @@
+{% extends 'finance/admin_base.html' %}
+{% comment %} {% extends 'finance/admin_base.html' %}
+
+{% block title %}Action Retrait{% endblock %}
+
+{% block content %}
+<div class="popup-overlay" style="display: block;">
+    <div class="contenu" style="color: black; background: white; padding: 30px; border-radius: 10px; max-width: 400px; margin: 50px auto;">
+        <h2>Action sur le Retrait #{{ retrait.codeRetrait }}</h2>
+        <p>Client: <strong>{{ retrait.codeClt.nomClt }}</strong> (ID: {{ retrait.codeClt.pk }})</p>
+        <p>Montant Net Retiré: <strong>{{ retrait.montant }} FCFA</strong></p>
+        <p>Compte de Retrait: <strong>{{ retrait.numRetrait|default:"N/A" }} ({{ retrait.nomNum|default:"Non Spécifié" }})</strong></p>
+        <p style="margin-top: 15px;">Statut actuel: <strong style="color: orange;">{{ retrait.statut|upper }}</strong></p>
+
+        <form method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            
+            <button type="submit" name="action" value="valider" 
+                    style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                ✅ Valider et Confirmer
+            </button>
+            
+            <button type="submit" name="action" value="annuler" 
+                    style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                ❌ Annuler et Rembourser
+            </button>
+        </form>
+
+        <a href="{% url 'valider-retrait' %}" style="display: block; text-align: center; margin-top: 15px; color: #007bff; text-decoration: none;">
+            Retour à la liste des retraits
+        </a>
+    </div>
+</div>
+{% endblock %} {% endcomment %}
+
+
+
+<!-- Content Wrapper. Contains page content -->
+
+{% block title %} Wealthwise - Cashout Validation {% endblock%} 
+
+{% block pageTitle %} Cashout {% endblock %} 
+
+{% block pageTitle2 %} Cashout {% endblock %} 
+
+{% block content %}
+    <div class="d-flex justify-content-center align-items-start" style="min-height:60vh;">
+        <div class="card w-50 p-4">
+            <h2 class="text-center">Action sur le Retrait #{{ retrait.codeRetrait }}</h2>
+            <p class="text-center">Client: <strong>{{ retrait.codeClt.nomClt }}</strong> (ID: {{ retrait.codeClt.pk }})</p>
+            <p class="text-center">Montant Net Retiré: <strong>{{ retrait.montant }} FCFA</strong></strong></p>
+            <p class="text-center">Compte de Retrait: <strong>{{ retrait.numRetrait|default:"N/A" }} ({{ retrait.nomNum|default:"Non Spécifié" }})</strong></strong></p>
+            <p style="margin-top: 15px; text-align:center;">Statut actuel: 
+                <strong style="color: orange;">
+                    {% if retrait.statut == 0 %}En attente
+                    {% elif retrait.statut == 1 %}Validé
+                    {% elif retrait.statut == 2 %}Annulé
+                    {% else %}Inconnu
+                    {% endif %}
+                </strong>
+            </p>
+
+            <form method="post" class="d-flex justify-content-center" style="margin-top: 20px;">
+                {% csrf_token %}
+                <div>
+                    <button type="submit" name="action" value="valider" 
+                            style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                        ➕ Valider et Créditer Solde
+                    </button>
+                    
+                    <button type="submit" name="action" value="annuler" 
+                            style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                        ❌ Annuler
+                    </button>
+                </div>
+            </form>
+
+            <a href="{% url 'valider-retrait' %}" class="d-block text-center mt-3" style="color: #007bff; text-decoration: none;">
+                Retour à la liste des dépôts
+            </a>
+        </div>
+    </div>
+{% endblock %}
