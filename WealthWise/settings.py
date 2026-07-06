@@ -9,13 +9,16 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2co45hfuov&-_u0k=e^d4$6ye@d)%3q0(+s^&&(*6qd-qgl#sx'
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.43.234','127.0.0.1', '10.250.118.6','10.109.0.6']
+
+# ALLOWED_HOSTS = ['192.168.43.234','127.0.0.1', '10.250.118.6','10.109.0.6']
+ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost'), '127.0.0.1']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,19 +66,55 @@ TEMPLATES = [
 WSGI_APPLICATION = 'WealthWise.wsgi.application'
 
 # Temporary SQLite for development (switch to MySQL when running the server)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'wealthwise_pro_db',
-        'USER': 'root',
-        'PASSWORD': '', 
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'wealthwise_pro_db',
+#         'USER': 'root',
+#         'PASSWORD': '', 
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'charset': 'utf8mb4',
+#         }
+#     }
+# }
+
+# production
+DB_HOST = os.environ.get('DB_HOST')
+
+if DB_HOST:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DB_NAME',
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': DB_HOST,
+            'PORT': os.environ.get('DB_PORT', '3306'),
+            'OPTIONS': {
+                'ssl': {
+                    'ca': os.environ.get('DB_SSL_CA_PATH', os.path.join(BASE_DIR, 'ca.pem'))
+                }
+            }
         }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', 
+            'NAME': 'wealthwise_pro_db',
+            'USER': 'root',
+            'PASSWORD': '', 
+            'HOST': 'localhost',
+            'PORT': '3306',
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+            }
+        }
+    }
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
