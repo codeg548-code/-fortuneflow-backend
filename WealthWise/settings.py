@@ -87,7 +87,7 @@ if DB_HOST:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('DB_NAME',
+            'NAME': os.environ.get('DB_NAME'),
             'USER': os.environ.get('DB_USER'),
             'PASSWORD': os.environ.get('DB_PASSWORD'),
             'HOST': DB_HOST,
