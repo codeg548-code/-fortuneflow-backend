@@ -722,67 +722,7 @@ def politique_controller(request):
     return render(request, "finance/politique_view.html")
 
 
-def process_expired_packs():
-    """
-    CRON JOB: Crédite le profit à la fin de la durée du pack (versement en une fois).
-    """
-    from django.utils import timezone
-    
-    maintenant = timezone.now()
-    achats_expires = (
-        Achat.objects.select_for_update()
-        .filter(date_expiration__lte=maintenant, profit_versé=False, is_active=True)
-        .select_related("codeClt", "codePack")
-    )
-
-    if not achats_expires:
-        return f"Aucun pack expiré à traiter à {maintenant.strftime('%H:%M:%S')}."
-
-    try:
-        with transaction.atomic():
-            gains_par_client = {}
-            clients_a_sauvegarder = {}
-            achats_traites = 0
-            total_gains_traites = 0
-            
-            for achat in achats_expires:
-                client = achat.codeClt
-                montant_investissement = achat.codePack.montant
-                montant_profit = achat.montant_total_profit
-                total_versement = montant_investissement + montant_profit
-
-                if client.pk not in gains_par_client:
-                    gains_par_client[client.pk] = 0
-                    clients_a_sauvegarder[client.pk] = client
-
-                gains_par_client[client.pk] += total_versement
-                total_gains_traites += montant_profit
-                
-                # Marquer le profit comme versé
-                achat.profit_versé = True
-                achat.is_active = False
-                achat.save(update_fields=["profit_versé", "is_active"])
-                achats_traites += 1
-                
-                # Mettre à jour la date d'expiration du dernier pack
-                client.last_pack_expiration_date = achat.date_expiration.date()
-            
-            # Créditer les clients
-            for client_pk, gain_total in gains_par_client.items():
-                client = clients_a_sauvegarder[client_pk]
-                client.solde += gain_total
-                client.revenu += total_gains_traites  # Ajouter les profits seulement
-                client.save(update_fields=["solde", "revenu", "last_pack_expiration_date"])
-
-        return (
-            f"Traitement RÉUSSI. {achats_traites} packs traités. "
-            f"Total crédité aux clients: {total_gains_traites} FCFA de profits."
-        )
-
-    except Exception as e:
-        print(f"Erreur fatale lors du traitement des packs expirés: {e}")
-        return f"Traitement ÉCHOUÉ : Une erreur interne est survenue : {e}"
-
+# CRON JOB POUR SUSPENSION DES RETRAITS
 
 def process_withdrawal_suspensions():
     """
@@ -834,26 +774,24 @@ def process_withdrawal_suspensions():
     return f"Suspensions créées : {suspensions_creees}"
 
 
-
+# CRON JOB POUR TRAITER LES PACKS EXPIRÉS
+# =====================================================================
+# 1. LA VUE API APPELÉE PAR CRON-JOB.ORG
+# =====================================================================
 def trigger_process_packs_api(request):
     """
     URL Secrète pour exécuter la commande de gestion via HTTP.
-    Exemple d'appel : /api/tasks/process-packs/?token=VOTRE_CLE_SECRETE_ICI
+    Exemple d'appel : /api/tasks/process-packs/?token=FortuneFlow_Secured_Cron_Token_2026_XYZ
     """
-    # Définissez un token sécurisé (vous pouvez aussi le mettre dans vos variables d'environnement)
     SECRET_TOKEN = "FortuneFlow_Secured_Cron_Token_2026_XYZ"
-    
-    # Récupération du token envoyé dans l'URL
     user_token = request.GET.get('token')
     
     if user_token != SECRET_TOKEN:
         return HttpResponseForbidden("Accès non autorisé.")
         
     try:
-        # 1. Traitement des packs expirés
+        # Exécution des fonctions locales directement (pas besoin de réimporter finance.views)
         result_packs = process_expired_packs()
-        
-        # 2. Traitement des suspensions de retraits
         result_suspensions = process_withdrawal_suspensions()
         
         return JsonResponse({
@@ -868,6 +806,76 @@ def trigger_process_packs_api(request):
             "message": str(e)
         }, status=500)
 
+
+# =====================================================================
+# 2. LA FONCTION TRAITEMENT DES PACKS CORRIGÉE (Déplacement du select_for_update)
+# =====================================================================
+def process_expired_packs():
+    """
+    CRON JOB: Crédite le profit à la fin de la durée du pack (versement en une fois).
+    """
+    from django.utils import timezone
+    
+    maintenant = timezone.now()
+    
+    try:
+        # On ouvre TOUJOURS la transaction d'abord pour sécuriser le select_for_update()
+        with transaction.atomic():
+            
+            # REQUÊTE DÉPLACÉE ICI À L'INTÉRIEUR :
+            achats_expires = (
+                Achat.objects.select_for_update()
+                .filter(date_expiration__lte=maintenant, profit_versé=False, is_active=True)
+                .select_related("codeClt", "codePack")
+            )
+
+            if not achats_expires:
+                return f"Aucun pack expiré à traiter à {maintenant.strftime('%H:%M:%S')}."
+
+            gains_par_client = {}
+            clients_a_sauvegarder = {}
+            achats_traites = 0
+            total_gains_traites = 0
+            
+            for achat in achats_expires:
+                client = achat.codeClt
+                montant_investissement = achat.codePack.montant
+                montant_profit = achat.montant_total_profit
+                total_versement = montant_investissement + montant_profit
+
+                if client.pk not in gains_par_client:
+                    gains_par_client[client.pk] = 0
+                    clients_a_sauvegarder[client.pk] = client
+
+                gains_par_client[client.pk] += total_versement
+                total_gains_traites += montant_profit
+                
+                # Marquer le profit comme versé
+                achat.profit_versé = True
+                achat.is_active = False
+                achat.save(update_fields=["profit_versé", "is_active"])
+                achats_traites += 1
+                
+                # Mettre à jour la date d'expiration du dernier pack
+                client.last_pack_expiration_date = achat.date_expiration.date()
+            
+            # Créditer les clients
+            for client_pk, gain_total in gains_par_client.items():
+                client = clients_a_sauvegarder[client_pk]
+                client.solde += gain_total
+                client.revenu += total_gains_traites  # Ajouter les profits seulement
+                client.save(update_fields=["solde", "revenu", "last_pack_expiration_date"])
+
+        return (
+            f"Traitement RÉUSSI. {achats_traites} packs traités. "
+            f"Total crédité aux clients: {total_gains_traites} FCFA de profits."
+        )
+
+    except Exception as e:
+        print(f"Erreur fatale lors du traitement des packs expirés: {e}")
+        return f"Traitement ÉCHOUÉ : Une erreur interne est survenue : {e}"
+    
+    
 
 def admin_required(view_func):
     """Décorateur pour exiger que l'utilisateur soit un administrateur."""
