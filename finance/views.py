@@ -776,7 +776,7 @@ def process_withdrawal_suspensions():
 
 # CRON JOB POUR TRAITER LES PACKS EXPIRÉS
 # =====================================================================
-# 1. LA VUE API APPELÉE PAR CRON-JOB.ORG
+# 1. LA VUE API APPELÉE PAR CRON-JOB.ORG (CORRIGÉE)
 # =====================================================================
 def trigger_process_packs_api(request):
     """
@@ -790,7 +790,8 @@ def trigger_process_packs_api(request):
         return HttpResponseForbidden("Accès non autorisé.")
         
     try:
-        # Exécution des fonctions locales directement (pas besoin de réimporter finance.views)
+        # ATTENTION : Assurez-vous que la fonction process_expired_packs() existe bien !
+        # Si elle est dans un autre fichier, importez-la. Exemple: from .helpers import process_expired_packs
         result_packs = process_expired_packs()
         result_suspensions = process_withdrawal_suspensions()
         
@@ -801,11 +802,11 @@ def trigger_process_packs_api(request):
         }, status=200)
         
     except Exception as e:
+        logger.exception("Erreur lors de l'exécution du Cron Job API")
         return JsonResponse({
             "status": "error",
             "message": str(e)
         }, status=500)
-
 
 # =====================================================================
 # 2. LA FONCTION TRAITEMENT DES PACKS CORRIGÉE (Déplacement du select_for_update)
@@ -875,7 +876,7 @@ def process_expired_packs():
         print(f"Erreur fatale lors du traitement des packs expirés: {e}")
         return f"Traitement ÉCHOUÉ : Une erreur interne est survenue : {e}"
     
-    
+
 
 def admin_required(view_func):
     """Décorateur pour exiger que l'utilisateur soit un administrateur."""
