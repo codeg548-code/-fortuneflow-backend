@@ -177,8 +177,9 @@ class DepotViewSet(
         client = Client.objects.get(pk=request.user.pk)
         montant = request.data.get("montant") or request.data.get("montant_str")
         idtransaction = request.data.get("idtransaction") or request.data.get("idTransaction")
+        moyen_paiement = request.data.get("moyen_paiement") or request.data.get("moyenPaiement") 
         try:
-            depot = create_depot(client, montant, idtransaction)
+            depot = create_depot(client, montant, idtransaction, moyen_paiement)
         except ValueError as e:
             raise ValidationError({"detail": str(e)})
         return Response(

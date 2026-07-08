@@ -4,7 +4,7 @@ from decimal import Decimal, InvalidOperation
 from django.db import transaction
 from django.db.models import F, Sum
 from django.utils import timezone
-from jsonschema import ValidationError
+from rest_framework.exceptions import ValidationError
 
 from .constants import (
     COMMISSION_RATE,
