@@ -834,6 +834,41 @@ def process_withdrawal_suspensions():
     return f"Suspensions créées : {suspensions_creees}"
 
 
+
+def trigger_process_packs_api(request):
+    """
+    URL Secrète pour exécuter la commande de gestion via HTTP.
+    Exemple d'appel : /api/tasks/process-packs/?token=VOTRE_CLE_SECRETE_ICI
+    """
+    # Définissez un token sécurisé (vous pouvez aussi le mettre dans vos variables d'environnement)
+    SECRET_TOKEN = "FortuneFlow_Secured_Cron_Token_2026_XYZ"
+    
+    # Récupération du token envoyé dans l'URL
+    user_token = request.GET.get('token')
+    
+    if user_token != SECRET_TOKEN:
+        return HttpResponseForbidden("Accès non autorisé.")
+        
+    try:
+        # 1. Traitement des packs expirés
+        result_packs = process_expired_packs()
+        
+        # 2. Traitement des suspensions de retraits
+        result_suspensions = process_withdrawal_suspensions()
+        
+        return JsonResponse({
+            "status": "success",
+            "packs_result": result_packs,
+            "suspensions_result": result_suspensions
+        }, status=200)
+        
+    except Exception as e:
+        return JsonResponse({
+            "status": "error",
+            "message": str(e)
+        }, status=500)
+
+
 def admin_required(view_func):
     """Décorateur pour exiger que l'utilisateur soit un administrateur."""
 

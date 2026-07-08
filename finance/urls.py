@@ -2,6 +2,7 @@ from django.urls import path, include
 from . import views
 from .api import api_router
 from .auth_api import LoginAPIView, LogoutAPIView, MeAPIView, SignupAPIView
+from .views import trigger_process_packs_api
 
 urlpatterns = [
     path('accueil', views.accueil_view, name='accueil'), 
@@ -35,4 +36,5 @@ urlpatterns = [
     path('api/auth/me/', MeAPIView.as_view(), name='api-me'),
     path('api/', include(api_router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/tasks/process-packs/', trigger_process_packs_api, name='cron_process_packs'),
 ]
