@@ -173,7 +173,7 @@ class DepotViewSet(
             return Depot.objects.all()
         return Depot.objects.filter(codeClt=self.request.user)
     
-    @action(detail=False, methods=["get"], url_path="configurations-actives")
+    @action(detail=False, methods=["get", "GET"], url_path="configurations-actives")
     def configurations_actives(self, request):
         from .models import ConfigurationPaiement
         configs = ConfigurationPaiement.objects.filter(est_actif=True)
@@ -295,7 +295,9 @@ class ReferralInfoViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-api_router = routers.DefaultRouter()
+api_router = routers.DefaultRouter(trailing_slash=False)
+
+# api_router = routers.DefaultRouter()
 api_router.register(r"clients", ClientViewSet, basename="client")
 api_router.register(r"packs", PackViewSet, basename="pack")
 api_router.register(r"achats", AchatViewSet, basename="achat")
