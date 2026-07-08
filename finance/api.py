@@ -295,9 +295,9 @@ class ReferralInfoViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-api_router = routers.DefaultRouter(trailing_slash=False)
+# api_router = routers.DefaultRouter(trailing_slash=False)
 
-# api_router = routers.DefaultRouter()
+api_router = routers.DefaultRouter()
 api_router.register(r"clients", ClientViewSet, basename="client")
 api_router.register(r"packs", PackViewSet, basename="pack")
 api_router.register(r"achats", AchatViewSet, basename="achat")
