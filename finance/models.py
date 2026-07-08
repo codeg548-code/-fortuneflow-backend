@@ -321,3 +321,24 @@ class WithdrawalWindow(models.Model):
     
     def __str__(self):
         return f"Fenêtre de retrait: {self.start_time} - {self.end_time}"
+
+
+class ConfigurationPaiement(models.Model):
+    CHOIX_RESEAU = [
+        ('MTN', 'MTN Mobile Money (MoMo)'),
+        ('ORANGE', 'Orange Money (OM)'),
+    ]
+
+    reseau = models.CharField(max_length=10, choices=CHOIX_RESEAU, unique=True, verbose_name="Réseau / Opérateur")
+    numero_reception = models.CharField(max_length=50, verbose_name="Numéro de réception des fonds")
+    nom_compte = models.CharField(max_length=150, verbose_name="Nom complet du compte")
+    syntaxe_ussd = models.CharField(max_length=255, blank=True, null=True, verbose_name="Syntaxe USSD (Optionnel)")
+    est_actif = models.BooleanField(default=True, verbose_name="Actif / Visible par les clients")
+    derniere_modification = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Configuration de Paiement"
+        verbose_name_plural = "Configurations de Paiements"
+
+    def __str__(self):
+        return f"{self.get_reseau_display()} - {self.numero_reception}"

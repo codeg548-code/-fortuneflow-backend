@@ -4,6 +4,7 @@ from decimal import Decimal, InvalidOperation
 from django.db import transaction
 from django.db.models import F, Sum
 from django.utils import timezone
+from jsonschema import ValidationError
 
 from .constants import (
     COMMISSION_RATE,
@@ -105,42 +106,36 @@ def buy_pack(client, pack):
     return achat
 
 
-def create_depot(client, montant_str, idtransaction=None):
-    if not (client.numero_portefeuille and client.nom_beneficiaire):
-        raise ValueError(
-            "Veuillez renseigner votre moyen de paiement dans la page Mon compte avant de recharger."
-        )
+def create_depot(client, montant_str, idtransaction, moyen_paiement):
+    if not idtransaction or not idtransaction.strip():
+        raise ValidationError("L'ID de transaction est obligatoire.")
+        
+    if not moyen_paiement or moyen_paiement not in ['MTN', 'ORANGE']:
+        raise ValidationError("Veuillez sélectionner un moyen de paiement valide (MTN ou ORANGE).")
 
     try:
-        montant = Decimal(str(montant_str).strip())
+        montant = Decimal(montant_str)
         if montant <= 0:
-            raise ValueError("Le montant doit être supérieur à zéro.")
+            raise ValidationError("Le montant doit être supérieur à zéro.")
     except (InvalidOperation, TypeError):
-        raise ValueError("Le montant saisi n'est pas un nombre valide.")
+        raise ValidationError("Le montant saisi n'est pas valide.")
 
     if montant < MINIMUM_RECHARGE:
-        raise ValueError(f"Le montant minimum de recharge est de {MINIMUM_RECHARGE} FCFA.")
-
-    if not idtransaction:
-        idtransaction = f"DEP{random.randint(100000, 999999)}"
+        raise ValidationError(f"Le montant minimum de recharge est de {MINIMUM_RECHARGE} FCFA.")
 
     if Depot.objects.filter(idTransaction=idtransaction).exists():
-        raise ValueError(
-            "Cet ID de transaction est déjà enregistré. Veuillez vérifier ou contacter le support."
-        )
+        raise ValidationError("Cet ID de transaction a déjà été soumis.")
 
-    nom = client.nom_beneficiaire or client.nomClt
-    numero = client.numero_portefeuille
-
-    return Depot.objects.create(
+    # Enregistrement du dépôt avec les nouvelles métadonnées
+    depot = Depot.objects.create(
         codeClt=client,
-        nomNum=nom,
-        numDepot=numero,
-        montant=int(montant),
+        nomNum=f"Dépôt via {moyen_paiement}",
+        numDepot=client.numero,
+        montant=montant,
         idTransaction=idtransaction,
         statut="en attente",
     )
-
+    return depot
 
 def create_retrait(client, montant_str):
     if not (client.numero_portefeuille and client.nom_beneficiaire):

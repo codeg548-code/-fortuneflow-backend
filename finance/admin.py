@@ -4,6 +4,8 @@ from django.db import transaction
 from django.utils import timezone
 import csv
 
+from .models import ConfigurationPaiement
+
 from .models import Pack, Client, Depot, Retrait, Achat, Parrainage
 from .models import WithdrawalWindow, WithdrawalSuspension, ReferralInfo
 from .constants import PARRAINAGE_FIRST_COMMISSION_RATE
@@ -11,6 +13,7 @@ from django.urls import path
 from django.shortcuts import render
 from django.db.models import F
 from django.db.models import Sum
+
 
 
 @admin.register(Pack)
@@ -215,3 +218,11 @@ def get_urls():
     return my_urls + urls
 
 admin.site.get_urls = get_urls
+
+
+
+@admin.register(ConfigurationPaiement)
+class ConfigurationPaiementAdmin(admin.ModelAdmin):
+    list_display = ("reseau", "numero_reception", "nom_compte", "est_actif", "derniere_modification")
+    list_editable = ("numero_reception", "nom_compte", "est_actif")
+    list_filter = ("est_actif", "reseau")

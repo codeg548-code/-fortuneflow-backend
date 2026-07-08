@@ -185,6 +185,20 @@ class DepotViewSet(
             DepotSerializer(depot).data,
             status=status.HTTP_201_CREATED,
         )
+    
+    @action(detail=False, methods=["get"], url_path="configurations-actives")
+    def configurations_actives(self, request):
+        from .models import ConfigurationPaiement
+        configs = ConfigurationPaiement.objects.filter(est_actif=True)
+        data = {}
+        for c in configs:
+            data[c.reseau] = {
+                "label": c.get_reseau_display(),
+                "numero": c.numero_reception,
+                "nom": c.nom_compte,
+                "syntaxe": c.syntaxe_ussd or "Via l'application officielle",
+            }
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class RetraitViewSet(
