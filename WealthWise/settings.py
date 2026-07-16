@@ -241,5 +241,4 @@ CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://fortuneflow-ngc2.onrender.com',
-    'fortuneflow-ngc2.onrender.com',
 ]
