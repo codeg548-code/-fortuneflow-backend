@@ -195,7 +195,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = False
 # SESSION_COOKIE_SAMESITE = 'Lax'
 # CSRF_COOKIE_SAMESITE = 'Lax'
 
@@ -234,10 +234,12 @@ CORS_ALLOWED_ORIGINS = [
     'https://fortuneflow-ngc2.onrender.com',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'fortuneflow-ngc2.onrender.com',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://fortuneflow-ngc2.onrender.com',
+    'fortuneflow-ngc2.onrender.com',
 ]

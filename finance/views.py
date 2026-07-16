@@ -910,7 +910,8 @@ def admin_dashboard_view(request):
 
 
 @login_required(login_url="login")
-@user_passes_test(is_superuser, login_url="accueil")
+# @user_passes_test(is_superuser, login_url="accueil")
+@admin_required
 def valdep_view(request):
     """
     Affiche la liste des dépôts en attente pour l'administrateur.
@@ -926,7 +927,8 @@ def valdep_view(request):
 
 
 @login_required(login_url="login")
-@user_passes_test(is_superuser, login_url="accueil")
+# @user_passes_test(is_superuser, login_url="accueil")
+@admin_required
 def valider_depot_action(request, codeDepot):
     """
     Gère la validation (crédit du solde) ou l'annulation d'un dépôt.
@@ -984,7 +986,8 @@ def valider_depot_action(request, codeDepot):
 
 
 @login_required(login_url="login")
-@user_passes_test(is_superuser, login_url="accueil")
+# @user_passes_test(is_superuser, login_url="accueil")
+@admin_required
 def valretrait_view(request):
     """
     Affiche la liste des retraits ayant le statut 'en attente'.
@@ -1000,7 +1003,8 @@ def valretrait_view(request):
 
 
 @login_required(login_url="login")
-@user_passes_test(is_superuser, login_url="accueil")
+# @user_passes_test(is_superuser, login_url="accueil")
+@admin_required
 def valider_retrait_action(request, codeRetrait):
     """
     Gère la validation ou l'annulation d'un retrait spécifique.
