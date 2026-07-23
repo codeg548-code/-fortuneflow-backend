@@ -61,7 +61,7 @@ def _get_payment_rows(client):
 def is_superuser(user):
     return user.is_superuser
 
-
+@csrf_exempt
 def signup_view(request, ref=None):
     """
     Gère l'enregistrement du Client.
@@ -149,6 +149,7 @@ def signup_view(request, ref=None):
         # ... (Logique GET) ...
         return render(request, "finance/signup_view.html", {"ref": ref})
 
+@csrf_exempt
 def login_view(request):
     # if request.user.is_authenticated:
     #     return redirect("accueil")
