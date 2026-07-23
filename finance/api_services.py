@@ -24,7 +24,7 @@ def get_dashboard_data(client, frontend_origin="http://localhost:5173"):
         "solde": client.solde,
         "revenu": client.revenu,
         "id": client.pk,
-        "parrainage_link": f"{frontend_origin}/signup/{client.pk}",
+        "parrainage_link": f"{frontend_origin}/#/signup/{client.pk}",
     }
 
 
@@ -272,7 +272,7 @@ def get_parrainage_summary(client, frontend_origin="http://localhost:5173"):
 
     return {
         "filleuls": filleuls_data,
-        "parrainage_link": f"{frontend_origin}/signup/{client.pk}",
+        "parrainage_link": f"{frontend_origin}/#/signup/{client.pk}",
         "parrainage_count": len(filleuls_data),
         "total_invested_all": total_invested_all,
     }
