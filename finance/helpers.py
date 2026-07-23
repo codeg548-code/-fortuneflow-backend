@@ -16,7 +16,7 @@ def phone_last_digits(numero, count=4):
 
 def parrainage_link(request, client):
     """Lien de parrainage au format URL correct (/signup/<code>/)."""
-    return f"http://{request.get_host()}/signup/{client.pk}/"
+    return f"http://{request.get_host()}/#/signup/{client.pk}/"
 
 
 def client_has_payment_info(client):
