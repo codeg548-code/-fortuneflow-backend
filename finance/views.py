@@ -234,7 +234,7 @@ def compte_view(request):
     context = {
         "client": client,
         "parrainage_count": parrainage_actif.count(),
-        "parrainage_link": f"http://{request.get_host()}/signup?ref={client.pk}",
+        "parrainage_link": f"http://{request.get_host()}/#/signup?ref={client.pk}",
         "payment_rows": payment_rows,
         "payment_complete": payment_complete,
         "numero_display": client.numero,
@@ -276,7 +276,7 @@ def parrainage_view(request):
     context = {
         "client": client,
         "filleuls": filleuls_data,
-        "parrainage_link": f"http://{request.get_host()}/signup?ref={client.pk}",
+        "parrainage_link": f"http://{request.get_host()}/#/signup?ref={client.pk}",
         "parrainage_count": len(filleuls_data),
         "total_invested_all": total_invested_all,
     }
