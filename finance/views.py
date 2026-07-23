@@ -200,7 +200,7 @@ def accueil_view(request):
         "solde": getattr(user, "solde", 0),
         "revenu": getattr(user, "revenu", 0),
         "id": user.pk,
-        "HOST": f"http://{request.get_host()}/signup?ref={user.pk}",
+        "HOST": f"http://{request.get_host()}/#/signup?ref={user.pk}",
     }
 
     return render(request, "finance/accueil_view.html", context)
