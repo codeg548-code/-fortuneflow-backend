@@ -1,3 +1,6 @@
+from django.core.cache import cache
+
+
 def mask_phone(numero):
     """Masque un numéro pour affichage (ex: 670123456 → 670 *** **56)."""
     if not numero:
@@ -29,9 +32,20 @@ def pack_est_achat_unique(pack):
     return achat_unique or pack.nomPack == PACK_NOM_ACHAT_UNIQUE
 
 
-def client_a_deja_achete_pack(client, pack):
+def nombre_achats_pack_par_client(client, pack):
+    """Retourne le nombre total de fois qu'un client a acheté un pack donné."""
     from .models import Achat
-    return Achat.objects.filter(codeClt=client, codePack=pack).exists()
+    if not client or not pack:
+        return 0
+    return Achat.objects.filter(codeClt=client, codePack=pack).count()
+
+
+def client_a_deja_achete_pack(client, pack):
+    """
+    Conservé pour rétrocompatibilité.
+    Indique si le client a déjà acheté ce pack au moins une fois.
+    """
+    return nombre_achats_pack_par_client(client, pack) > 0
 
 
 def pack_est_en_stock(pack):
@@ -46,11 +60,26 @@ def pack_est_en_stock(pack):
 
 
 def pack_peut_etre_achete(client, pack):
-    """Retourne (autorisé, message d'erreur)."""
+    """
+    Vérifie si le pack peut être acheté par un client.
+    Retourne (bool, str): (Autorisé, Message d'erreur)
+    """
     if not pack_est_en_stock(pack):
         return False, "Ce pack est épuisé."
-    if client and pack_est_achat_unique(pack) and client_a_deja_achete_pack(client, pack):
-        return False, "Vous avez déjà acheté ce pack."
+
+    if client:
+        achats_actuels = nombre_achats_pack_par_client(client, pack)
+
+        # 1. Vérification de la contrainte 'occurrence_max' définie dans l'admin
+        occurrence_max = getattr(pack, "occurrence_max", None)
+        if occurrence_max is not None and occurrence_max > 0:
+            if achats_actuels >= occurrence_max:
+                return False, f"Vous avez atteint la limite d'achat pour ce pack ({occurrence_max} max)."
+
+        # 2. Vérification historique pour les packs marqués en 'achat unique'
+        if pack_est_achat_unique(pack) and achats_actuels >= 1:
+            return False, "Vous avez déjà acheté ce pack."
+
     return True, ""
 
 
@@ -63,6 +92,7 @@ def enrichir_packs_pour_client(packs, client=None):
         if not client and not est_en_stock:
             peut_acheter, message = False, "Stock épuisé."
         deja_achete = client_a_deja_achete_pack(client, pack) if client else False
+        
         result.append({
             "pack": pack,
             "peut_acheter": peut_acheter,
@@ -71,6 +101,7 @@ def enrichir_packs_pour_client(packs, client=None):
             "est_en_stock": est_en_stock,
             "stock_disponible": getattr(pack, "stock_disponible", None),
             "stock_initial": getattr(pack, "stock_initial", None),
+            "nombre_achats": nombre_achats_pack_par_client(client, pack) if client else 0,
         })
     return result
 
