@@ -189,6 +189,19 @@ class Achat(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
+            # Vérification de l'occurrence max avant la création
+            occurrence_max = getattr(self.codePack, "occurrence_max", None)
+            if occurrence_max is not None and occurrence_max > 0:
+                achats_existants = Achat.objects.filter(
+                    codeClt=self.codeClt, 
+                    codePack=self.codePack
+                ).count()
+                
+                if achats_existants >= occurrence_max:
+                    raise ValueError(
+                        f"Limite atteinte : vous ne pouvez acheter le pack '{self.codePack.nomPack}' que {occurrence_max} fois au maximum."
+                    )
+
             maintenant = timezone.now()
             # Calcul de la date d'expiration basée sur la durée du pack (en jours)
             self.date_expiration = maintenant + timedelta(days=self.codePack.duree)
