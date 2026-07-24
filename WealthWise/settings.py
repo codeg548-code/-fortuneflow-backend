@@ -194,6 +194,13 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'fortuneflow-cache',
+    }
+}
+
 
 SESSION_COOKIE_HTTPONLY = False
 # SESSION_COOKIE_SAMESITE = 'Lax'
