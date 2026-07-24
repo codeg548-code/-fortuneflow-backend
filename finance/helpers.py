@@ -73,3 +73,12 @@ def enrichir_packs_pour_client(packs, client=None):
             "stock_initial": getattr(pack, "stock_initial", None),
         })
     return result
+
+
+def invalidate_user_cache(user_id):
+    """
+    Invalide le cache du dashboard de l'utilisateur.
+    À appeler dès qu'une opération modifie le solde ou le revenu du client.
+    """
+    if user_id:
+        cache.delete(f"user_dashboard_{user_id}")
